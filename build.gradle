@@ -20,6 +20,13 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.8.0-beta4'
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.8.0-beta4'
 
+//    Postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
+
+//    Spring
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.10'
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.10'
+
 //    Test
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
