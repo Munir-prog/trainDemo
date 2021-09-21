@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,27 +21,37 @@ public class TicketDao implements Dao<Ticket> {
     private final ConnectionManager connectionManager;
 
     @Override
+    @SneakyThrows
     public List<Ticket> findAll() {
 
         List<Ticket> tickets = new ArrayList<>();
 
         try (var connection = connectionManager.get();
-             var preparedStatement = connection.prepareStatement("select * from ticket")){
+             var preparedStatement = connection.prepareStatement("select * from ticket")) {
             var resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 tickets.add(buildTicket(resultSet));
             }
-            System.out.println(tickets);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
 
         return tickets;
     }
 
     @Override
-    public Ticket findById() {
-        return null;
+    @SneakyThrows
+    public Optional<Ticket> findById(int ticketId) {
+        Ticket ticket = null;
+
+        try (var connection = connectionManager.get();
+             var preparedStatement = connection.prepareStatement("select * from ticket where id = ?")){
+            preparedStatement.setObject(1, ticketId);
+            var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                ticket = buildTicket(resultSet);
+            }
+        }
+
+        return Optional.ofNullable(ticket);
     }
 
     @SneakyThrows
