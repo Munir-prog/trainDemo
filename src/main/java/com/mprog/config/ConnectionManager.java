@@ -10,10 +10,8 @@ import java.sql.DriverManager;
 @Component
 @Getter
 @Setter
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectionManager {
 
-//    private static final ConnectionManager INSTANCE = new ConnectionManager();
 
     @Value("${db.url}")
     private String dbUrl;
@@ -39,7 +37,4 @@ public class ConnectionManager {
                 .getConnection(dbUrl, dbUser, dbPassword);
     }
 
-//    public static ConnectionManager getINSTANCE() {
-//        return INSTANCE;
-//    }
 }
