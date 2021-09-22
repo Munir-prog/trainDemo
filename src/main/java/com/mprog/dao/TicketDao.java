@@ -5,6 +5,7 @@ import com.mprog.config.ConnectionManager;
 import com.mprog.entity.Ticket;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class TicketDao implements Dao<Ticket> {
 
     private final ConnectionManager connectionManager;
@@ -23,7 +25,7 @@ public class TicketDao implements Dao<Ticket> {
     @Override
     @SneakyThrows
     public List<Ticket> findAll() {
-
+        log.info("start of dao method find all tickets");
         List<Ticket> tickets = new ArrayList<>();
 
         try (var connection = connectionManager.get();
@@ -34,12 +36,14 @@ public class TicketDao implements Dao<Ticket> {
             }
         }
 
+        log.info("end of find all method");
         return tickets;
     }
 
     @Override
     @SneakyThrows
     public Optional<Ticket> findById(int ticketId) {
+        log.info("start of dao method find ticket by id: " + ticketId);
         Ticket ticket = null;
 
         try (var connection = connectionManager.get();
@@ -48,9 +52,10 @@ public class TicketDao implements Dao<Ticket> {
             var resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 ticket = buildTicket(resultSet);
+                log.info("found ticket: " + ticket);
             }
         }
-
+        log.info("end of dao method find ticket by id");
         return Optional.ofNullable(ticket);
     }
 

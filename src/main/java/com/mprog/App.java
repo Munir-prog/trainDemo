@@ -11,8 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 public class App {
 
     public static void main(String[] args) {
+        log.info("Program started");
         var context = new AnnotationConfigApplicationContext(App.class);
         var conversationService = context.getBean(ConversationService.class);
         conversationService.doConversation();
+        log.info("Program finished");
     }
 }
