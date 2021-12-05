@@ -43,7 +43,7 @@ public class TicketDao implements Dao<Ticket> {
     @Override
     @SneakyThrows
     public Optional<Ticket> findById(int ticketId) {
-        log.info("start of dao method find ticket by id: " + ticketId);
+        log.info("start of dao method find ticket by id: {}", ticketId);
         Ticket ticket = null;
 
         try (var connection = connectionManager.get();
@@ -52,7 +52,7 @@ public class TicketDao implements Dao<Ticket> {
             var resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 ticket = buildTicket(resultSet);
-                log.info("found ticket: " + ticket);
+                log.info("found ticket: {}", ticket);
             }
         }
         log.info("end of dao method find ticket by id");

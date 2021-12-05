@@ -15,23 +15,24 @@ public class ConversationServiceImpl implements ConversationService{
     private final MessageService messageService;
     private final IOService ioService;
     private final Dao<Ticket> ticketDao;
-    private boolean commandGot = false;
+    private boolean exit = false;
 
     public void doConversation(){
-        log.info("greet user");
+        log.info("greeting user...");
         localizePrintln("conversation.hello");
 
         log.info("start getting command");
-        while (!commandGot) {
+        while (!exit) {
             String command = getCommand();
 
-            if (command.equals("find-all")) {
-                findAll();
-            } else if (command.equals("find-by-id")) {
-                findById();
+            log.info("commad got: {}", command);
+
+            switch (command) {
+                case "find-all" -> findAll();
+                case "find-by-id" -> findById();
+                case "exit" -> exit = true;
             }
         }
-        log.info("end getting command");
 
         localizePrintln("conversation.exit");
         log.info("exit from conversation");
@@ -40,20 +41,19 @@ public class ConversationServiceImpl implements ConversationService{
     private void findById() {
         log.info("start finding by id");
         localizePrint("conversation.get-id");
-        log.info("get id from user");
         var ticketId = ioService.nextInt();
+        log.info("got id from user: {}", ticketId);
 
         localizePrintln("conversation.output");
 
-        commandGot = true;
         ticketDao.findById(ticketId).ifPresentOrElse(
                 ioService::println,
                 () -> {
                     localizePrint("conversation.no-such-ticket");
-                    commandGot = false;
                 }
         );
         log.info("end of finding by id");
+
     }
 
     private void findAll() {
@@ -61,11 +61,10 @@ public class ConversationServiceImpl implements ConversationService{
         var tickets = ticketDao.findAll();
         localizePrintln("conversation.output");
         tickets.forEach(ioService::println);
-        commandGot = true;
         log.info("end of finding all");
     }
 
-    private String getCommand() {
+    public String getCommand() {
         log.info("getting command");
         localizePrint("conversation.enter-command");
         return ioService.nextLine().trim();
